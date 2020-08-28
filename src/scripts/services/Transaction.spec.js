@@ -130,7 +130,9 @@ describe("transaction", function () {
         date: "2012-12-12T06:00:00.000Z",
       });
 
-      expect(tran.date.toISOString().indexOf("2012-12-12")).toBe(0);
+      expect(tran.date.getFullYear()).toBe(2012);
+      expect(tran.date.getMonth()).toBe(11);
+      expect(tran.date.getDate()).toBe(12);
     });
 
     it("can be set from record", () => {
@@ -139,7 +141,9 @@ describe("transaction", function () {
       });
 
       expect(angular.isDate(tran.date)).toBe(true);
-      expect(tran.date.toISOString().indexOf("2012-12-12")).toBe(0);
+      expect(tran.date.getFullYear()).toBe(2012);
+      expect(tran.date.getMonth()).toBe(11);
+      expect(tran.date.getDate()).toBe(12);
       expect(tran.data.date.indexOf("2012-12-12")).toBe(0);
     });
   });

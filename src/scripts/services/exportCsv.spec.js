@@ -1,5 +1,25 @@
 describe("exportCsv", function () {
   let exportCsv, transaction, Transaction;
+  let originalNavigator;
+
+  beforeEach(function () {
+    // The tests are written for the 'en-US' locale. We need to ensure
+    // that this locale is used for tests. angular-translate and
+    // angular-dynamic-locale look first at
+    // window.navigator.languages[0] in order to determine which
+    // language/locale to use. window.navigator.languages is read-only,
+    // so we need to mock the whole navigator object.
+    originalNavigator = window.navigator;
+    window.navigator = new Object();
+    window.navigator.__proto__ = originalNavigator;
+    window.navigator.__defineGetter__('languages', function () {
+      return ['en-US'];
+    });
+  });
+
+  afterEach(function () {
+    window.navigator = originalNavigator;
+  });
 
   beforeEach(angular.mock.module("financier"));
 
