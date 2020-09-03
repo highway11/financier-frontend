@@ -1,24 +1,30 @@
 describe("exportCsv", function () {
   let exportCsv, transaction, Transaction;
-  let originalNavigator;
+  let originalLanguages;
+
+  function setLanguages(languages) {
+    // navigator.languages is read-only, so we cannot simply assign another
+    // value. Taken and adapted from https://stackoverflow.com/a/54096072.
+    Object.defineProperty(navigator, 'languages', {
+      get: function () {
+        return languages;
+      },
+      configurable: true,
+    });
+  }
 
   beforeEach(function () {
     // The tests are written for the 'en-US' locale. We need to ensure
     // that this locale is used for tests. angular-translate and
     // angular-dynamic-locale look first at
     // window.navigator.languages[0] in order to determine which
-    // language/locale to use. window.navigator.languages is read-only,
-    // so we need to mock the whole navigator object.
-    originalNavigator = window.navigator;
-    window.navigator = new Object();
-    window.navigator.__proto__ = originalNavigator;
-    window.navigator.__defineGetter__('languages', function () {
-      return ['en-US'];
-    });
+    // language/locale to use.
+    originalLanguages = navigator.languages;
+    setLanguages(['en-US']);
   });
 
   afterEach(function () {
-    window.navigator = originalNavigator;
+    setLanguages(originalLanguages);
   });
 
   beforeEach(angular.mock.module("financier"));
