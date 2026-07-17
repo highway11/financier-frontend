@@ -143,6 +143,12 @@
       >
         <i class="fa fa-exchange"></i> {{'MAKE_A_TRANSFER' | translate}}
       </button>
+      <button
+        class="account__add-button"
+        ng-click="dbCtrl.stopPropagation($event); accountCtrl.importCSV()"
+      >
+        <i class="fa fa-file-excel-o"></i> {{'IMPORT_CSV' | translate}}
+      </button>
 
       <button
         class="account__add-button"

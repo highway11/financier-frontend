@@ -297,5 +297,18 @@
   "LAST_12_MONTHS": "Last 12 months",
   "BACK_TO_WEBSITE": "Back to financier.io",
   "VERSION_INFORMATION": "Version {{number}} ({{date}})",
-  "SYNC_SUBSCRIPTION_ENDED": "Subscription ended!"
+  "SYNC_SUBSCRIPTION_ENDED": "Subscription ended!",
+  "IMPORT_CSV": "Import CSV",
+  "IMPORT_TRANSACTIONS": "Import Transactions",
+  "SELECT_ACCOUNT": "Select Account",
+  "CHOOSE_CSV_FILE": "Choose CSV file",
+  "STEP_1_FILE_ACCOUNT": "Step 1: Choose File & Account",
+  "STEP_2_MATCH_PAYEES": "Step 2: Match Payees",
+  "STEP_3_REVIEW_IMPORT": "Step 3: Review & Import",
+  "RAW_PAYEE": "Raw Payee",
+  "MAPPED_PAYEE": "Mapped Payee",
+  "REMEMBER_MAPPING": "Remember mapping",
+  "POTENTIAL_DUPLICATE": "Potential Duplicate",
+  "IMPORT_X_TRANSACTIONS": "Import {{count}} transactions",
+  "NO_TRANSACTIONS_FOUND": "No valid transactions found in the file."
 }

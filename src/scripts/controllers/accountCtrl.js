@@ -17,7 +17,8 @@ angular
       payee,
       myBudget,
       budgetRecord,
-      Hotkeys
+      Hotkeys,
+      ngDialog
     ) {
       const that = this;
 
@@ -152,6 +153,23 @@ angular
 
       that.selectedTransactionIndexes = [];
       that.selectedTransactions = [];
+
+      this.importCSV = () => {
+        const scope = $scope.$new({});
+        scope.accountId = this.accountId;
+        scope.manager = this.manager;
+        scope.myBudget = this.myBudget;
+        scope.payees = $scope.dbCtrl.payees;
+        scope.dbCtrl = $scope.dbCtrl;
+
+        ngDialog.open({
+          template: require("../../views/modal/importTransactions.html").default,
+          controller: "importTransactionsCtrl",
+          controllerAs: "importTransactionsCtrl",
+          scope,
+          className: "ngdialog-theme-default ngdialog-theme-default--large modal import-transactions-modal",
+        });
+      };
 
       this.createTransaction = () => {
         this.editingTransaction = null;

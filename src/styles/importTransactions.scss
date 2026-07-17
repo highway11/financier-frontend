@@ -1,0 +1,245 @@
+.import-transactions-modal {
+  .ngdialog-content {
+    width: 90% !important;
+    max-width: 1100px !important;
+    padding: 1.5em !important;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0.8em;
+    font-size: 1.6em;
+    color: $dark-gray;
+  }
+
+  // Step Tracker
+  .import-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid $light-gray;
+
+    .step-item {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      font-size: 0.85em;
+      color: lighten($dark-gray, 30%);
+      font-weight: bold;
+
+      span {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        line-height: 22px;
+        border-radius: 50%;
+        border: 2px solid $light-gray;
+        background-color: $white;
+        margin-right: 8px;
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      &.active {
+        color: $primary;
+        span {
+          border-color: $primary;
+          color: $primary;
+          background-color: lighten($primary-hover, 15%);
+        }
+      }
+
+      &.completed {
+        color: $dark-primary;
+        span {
+          border-color: $dark-primary;
+          color: $white;
+          background-color: $dark-primary;
+        }
+      }
+    }
+  }
+
+  // Step 1: Upload Layout
+  .upload-area {
+    border: 2px dashed $light-gray;
+    border-radius: 4px;
+    padding: 3em;
+    text-align: center;
+    background-color: #fafafa;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    margin-top: 1em;
+    margin-bottom: 1.5em;
+
+    &:hover {
+      border-color: $primary;
+      background-color: #f6fbf4;
+    }
+
+    i {
+      font-size: 3.5em;
+      color: lighten($dark-gray, 40%);
+      margin-bottom: 0.3em;
+    }
+
+    p {
+      margin: 0.5em 0;
+      color: $dark-gray;
+    }
+
+    .file-input-hidden {
+      display: none;
+    }
+  }
+
+  // Selected file info
+  .selected-file-info {
+    display: inline-block;
+    padding: 0.4em 0.8em;
+    background-color: lighten($primary-hover, 10%);
+    border: 1px solid $primary;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: $dark-primary;
+    margin-top: 0.5em;
+    font-weight: bold;
+
+    i {
+      margin-right: 6px;
+    }
+  }
+
+  // Scrollable Table Container
+  .table-container {
+    max-height: 350px;
+    overflow-y: auto;
+    border: 1px solid $light-gray;
+    margin-bottom: 1.5em;
+    background-color: $white;
+  }
+
+  // Wizard custom tables
+  .import-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid $light-gray;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+      color: $dark-gray;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fcfcfc;
+    }
+
+    .col-checkbox {
+      width: 40px;
+      text-align: center;
+    }
+
+    .col-amount {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .col-status {
+      width: 150px;
+    }
+
+    // Colors & Badges
+    .text-outflow {
+      color: darken($negative-number, 10%);
+    }
+
+    .text-inflow {
+      color: darken($positive-number, 30%);
+    }
+
+    // Row styles for duplicate warnings
+    &.transactions-review-table {
+      tr.potential-duplicate {
+        background-color: lighten($warning, 5%) !important;
+
+        &:hover {
+          background-color: $warning !important;
+        }
+      }
+    }
+  }
+
+  // Badges
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 0.8em;
+    font-weight: bold;
+    border-radius: 12px;
+    text-align: center;
+
+    &.badge-warning {
+      background-color: $warning;
+      color: darken($warning, 50%);
+      border: 1px solid darken($warning, 10%);
+    }
+
+    &.badge-success {
+      background-color: lighten($positive-number, 15%);
+      color: darken($positive-number, 40%);
+      border: 1px solid $positive-number;
+    }
+  }
+
+  // Payee mapping selectors
+  .payee-mapping-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .mapping-select {
+      flex: 1;
+      margin-right: 15px;
+    }
+
+    .remember-label {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.85em;
+      color: lighten($dark-gray, 20%);
+      cursor: pointer;
+      margin: 0;
+      white-space: nowrap;
+
+      input {
+        margin-right: 5px;
+        width: auto;
+        height: auto;
+      }
+    }
+  }
+
+  // Empty state
+  .empty-import-state {
+    text-align: center;
+    padding: 2.5em;
+    color: lighten($dark-gray, 30%);
+    i {
+      font-size: 3em;
+      margin-bottom: 0.4em;
+    }
+  }
+}

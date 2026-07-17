@@ -1,0 +1,191 @@
+<h2>{{'IMPORT_TRANSACTIONS' | translate}}</h2>
+
+<div class="import-steps">
+  <div class="step-item" ng-class="{'active': importTransactionsCtrl.step === 1, 'completed': importTransactionsCtrl.step > 1}">
+    <span>1</span>{{'STEP_1_FILE_ACCOUNT' | translate}}
+  </div>
+  <div class="step-item" ng-class="{'active': importTransactionsCtrl.step === 2, 'completed': importTransactionsCtrl.step > 2}">
+    <span>2</span>{{'STEP_2_MATCH_PAYEES' | translate}}
+  </div>
+  <div class="step-item" ng-class="{'active': importTransactionsCtrl.step === 3, 'completed': importTransactionsCtrl.step > 3}">
+    <span>3</span>{{'STEP_3_REVIEW_IMPORT' | translate}}
+  </div>
+</div>
+
+<!-- Step 1: Choose File & Account -->
+<div ng-if="importTransactionsCtrl.step === 1">
+  <label>
+    {{'SELECT_ACCOUNT' | translate}}
+    <select ng-model="importTransactionsCtrl.selectedAccountId" required>
+      <option value="" disabled>{{'SELECT_ACCOUNT' | translate}}</option>
+      <option ng-repeat="acc in importTransactionsCtrl.accounts" value="{{acc.id}}">{{acc.name}}</option>
+    </select>
+  </label>
+
+  <div class="upload-area" onclick="document.getElementById('csv-file-input').click()">
+    <i class="fa fa-cloud-upload"></i>
+    <p>{{'CHOOSE_CSV_FILE' | translate}}</p>
+    <input type="file" id="csv-file-input" file-read="importTransactionsCtrl.file" accept=".csv" class="file-input-hidden" />
+    
+    <div ng-if="importTransactionsCtrl.file" class="selected-file-info" onclick="event.stopPropagation()">
+      <i class="fa fa-file-text-o"></i> {{importTransactionsCtrl.file.name}}
+    </div>
+  </div>
+
+  <div class="message message--main" ng-if="importTransactionsCtrl.error">
+    {{importTransactionsCtrl.error}}
+  </div>
+  <div class="message message--main" style="background-color: #fafafa; border-color: #ddd; color: #555;" ng-if="importTransactionsCtrl.parsing">
+    <i class="fa fa-refresh fa-spin"></i> Parsing CSV file...
+  </div>
+</div>
+
+<!-- Step 2: Match Payees -->
+<div ng-if="importTransactionsCtrl.step === 2">
+  <div style="margin-bottom: 1em; color: #555;">
+    We cleaned the payee names from your bank statement. Please map them to existing payees or check the box to create a new payee.
+  </div>
+  
+  <div class="table-container">
+    <table class="import-table">
+      <thead>
+        <tr>
+          <th>{{'RAW_PAYEE' | translate}}</th>
+          <th>{{'MAPPED_PAYEE' | translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="mapping in importTransactionsCtrl.uniquePayees" class="payee-mapping-row">
+          <td>
+            <strong>{{mapping.rawName}}</strong>
+            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">
+              Amounts: {{mapping.amounts}}
+            </div>
+          </td>
+          <td class="payee-mapping-cell">
+            <select ng-model="mapping.payeeId" class="mapping-select">
+              <option value="NEW">Create new payee: "{{mapping.cleanedName}}"</option>
+              <option value="" disabled>-- Match to Existing Payee --</option>
+              <option ng-repeat="ep in importTransactionsCtrl.existingPayees" value="{{ep.id}}">{{ep.name}}</option>
+            </select>
+            <label class="remember-label">
+              <input type="checkbox" ng-model="mapping.remember" />
+              {{'REMEMBER_MAPPING' | translate}}
+            </label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Step 3: Review & Import -->
+<div ng-if="importTransactionsCtrl.step === 3">
+  <div style="margin-bottom: 1em; color: #555;">
+    Please review the transactions to import. Uncheck any potential duplicates you do not want to import.
+  </div>
+
+  <div class="table-container">
+    <table class="import-table transactions-review-table">
+      <thead>
+        <tr>
+          <th class="col-checkbox"><input type="checkbox" ng-model="selectAllReview" ng-init="selectAllReview = true" ng-change="importTransactionsCtrl.toggleAllReview(selectAllReview)" /></th>
+          <th>{{'DATE' | translate}}</th>
+          <th>{{'PAYEE' | translate}}</th>
+          <th>{{'CATEGORY' | translate}}</th>
+          <th>{{'MEMO' | translate}}</th>
+          <th class="col-amount">{{'OUTFLOW' | translate}}</th>
+          <th class="col-amount">{{'INFLOW' | translate}}</th>
+          <th class="col-status">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="t in importTransactionsCtrl.finalTransactions" ng-class="{'potential-duplicate': t.isDuplicate}">
+          <td class="col-checkbox">
+            <input type="checkbox" ng-model="t.import" />
+          </td>
+          <td>{{t.date | date : 'shortDate'}}</td>
+          <td><strong>{{t.payeeName}}</strong></td>
+          <td>
+            <span ng-if="t.categoryName" style="padding: 2px 6px; background-color: #f1f8e9; border: 1px solid #d0e7b8; border-radius: 3px; font-weight: bold; color: #5b903f; font-size: 0.95em;">
+              {{t.categoryName}}
+            </span>
+            <span ng-if="!t.categoryName" style="color: #999; font-style: italic; font-size: 0.95em;">
+              No category
+            </span>
+          </td>
+          <td><span style="color: #666; font-size: 0.9em;">{{t.rawPayee}}</span></td>
+          <td class="col-amount text-outflow">
+            <span ng-if="t.outflow">{{t.outflow | intCurrency : true : dbCtrl.currencyDigits | currency : dbCtrl.currencySymbol : dbCtrl.currencyDigits}}</span>
+          </td>
+          <td class="col-amount text-inflow">
+            <span ng-if="t.inflow">{{t.inflow | intCurrency : true : dbCtrl.currencyDigits | currency : dbCtrl.currencySymbol : dbCtrl.currencyDigits}}</span>
+          </td>
+          <td class="col-status">
+            <span ng-if="t.isDuplicate" class="badge badge-warning" title="A transaction with the same amount exists within 2 days.">
+              <i class="fa fa-exclamation-triangle"></i> {{'POTENTIAL_DUPLICATE' | translate}}
+            </span>
+            <span ng-if="!t.isDuplicate" class="badge badge-success">
+              <i class="fa fa-check"></i> Ready
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Footer -->
+<footer>
+  <button
+    type="button"
+    class="primary"
+    ng-if="importTransactionsCtrl.step === 1"
+    ng-disabled="!importTransactionsCtrl.file || !importTransactionsCtrl.selectedAccountId || importTransactionsCtrl.parsing"
+    ng-click="importTransactionsCtrl.goToStep2()"
+  >
+    {{'NEXT' | translate}}
+  </button>
+  <button
+    type="button"
+    ng-if="importTransactionsCtrl.step === 1"
+    ng-click="closeThisDialog()"
+  >
+    {{'CANCEL' | translate}}
+  </button>
+
+  <button
+    type="button"
+    class="primary"
+    ng-if="importTransactionsCtrl.step === 2"
+    ng-click="importTransactionsCtrl.goToStep3()"
+  >
+    {{'NEXT' | translate}}
+  </button>
+  <button
+    type="button"
+    ng-if="importTransactionsCtrl.step === 2"
+    ng-click="importTransactionsCtrl.step = 1"
+  >
+    {{'BACK' | translate}}
+  </button>
+
+  <button
+    type="button"
+    class="primary"
+    ng-if="importTransactionsCtrl.step === 3"
+    ng-disabled="importTransactionsCtrl.loading"
+    ng-click="importTransactionsCtrl.submit()"
+    ladda="importTransactionsCtrl.loading"
+  >
+    Import
+  </button>
+  <button
+    type="button"
+    ng-if="importTransactionsCtrl.step === 3"
+    ng-disabled="importTransactionsCtrl.loading"
+    ng-click="importTransactionsCtrl.step = 2"
+  >
+    {{'BACK' | translate}}
+  </button>
+</footer>
