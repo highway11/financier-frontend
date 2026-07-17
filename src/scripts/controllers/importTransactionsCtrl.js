@@ -83,7 +83,7 @@ angular
               };
 
               for (let row of rows) {
-                const rawDate = findValue(row, ["Date", "date", "DATE"]);
+                const rawDate = findValue(row, ["Date", "date", "DATE", "Posted Date", "posted date", "POSTED DATE", "Transaction Date", "transaction date", "TRANSACTION DATE"]);
                 const rawPayee = findValue(row, [
                   "Transaction Details",
                   "Payee",
@@ -367,10 +367,13 @@ angular
           });
       };
 
-      // Helper function to clean raw payee name
       function cleanPayeeName(raw) {
         if (!raw) return "";
         let clean = raw.trim();
+
+        if (/amzn\s+mktp/i.test(clean) || /amazon\.ca/i.test(clean) || /amazon\s+ca/i.test(clean)) {
+          return "Amazon";
+        }
 
         const prefixes = [
           /^pos merchandise\s+/i,
