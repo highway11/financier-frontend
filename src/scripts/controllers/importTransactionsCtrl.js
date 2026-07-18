@@ -11,6 +11,12 @@ angular
       const Transaction = transaction(budgetId);
 
       this.step = 1;
+      this.triggerUpload = () => {
+        const fileInput = document.getElementById("csv-file-input");
+        if (fileInput) {
+          fileInput.click();
+        }
+      };
       this.selectedAccountId = $scope.accountId || null;
       this.file = null;
       this.parsing = false;

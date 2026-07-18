@@ -22,12 +22,12 @@
     </select>
   </label>
 
-  <div class="upload-area" onclick="document.getElementById('csv-file-input').click()">
+  <div class="upload-area" ng-click="importTransactionsCtrl.triggerUpload()">
     <i class="fa fa-cloud-upload"></i>
     <p>{{'CHOOSE_CSV_FILE' | translate}}</p>
     <input type="file" id="csv-file-input" file-read="importTransactionsCtrl.file" accept=".csv" class="file-input-hidden" />
     
-    <div ng-if="importTransactionsCtrl.file" class="selected-file-info" onclick="event.stopPropagation()">
+    <div ng-if="importTransactionsCtrl.file" class="selected-file-info" ng-click="$event.stopPropagation()">
       <i class="fa fa-file-text-o"></i> {{importTransactionsCtrl.file.name}}
     </div>
   </div>
