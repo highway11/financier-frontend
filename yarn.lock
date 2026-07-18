@@ -1882,9 +1882,10 @@ angular-ladda-lw@^0.4.3:
   resolved "https://registry.yarnpkg.com/angular-ladda-lw/-/angular-ladda-lw-0.4.3.tgz#64ffe5b4c8c55998481c53eee7b718e080bdbfbf"
   integrity sha1-ZP/ltMjFWZhIHFPu57cY4IC9v78=
 
-"angular-legacy-sortablejs-maintained@https://github.com/OzzieOrca/angular-legacy-sortablejs#fix-sortablejs-import":
-  version "0.6.2"
-  resolved "https://github.com/OzzieOrca/angular-legacy-sortablejs#13f0a45b894672f4fdfa0f5904bb21e3113b6a34"
+angular-legacy-sortablejs-maintained@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/angular-legacy-sortablejs-maintained/-/angular-legacy-sortablejs-maintained-0.5.2.tgz#f057e84530952ede19a99bc9fdeb3c430767a1fd"
+  integrity sha512-glsD6FCkzsXhYZyz/aGXXkZYo9XHYwLYrouZ75AuWlxEOulloNnYeeGH9SeC3M4uiGYDTMNGMDH8hMSTngqw6Q==
 
 angular-md5@^0.1.10:
   version "0.1.10"

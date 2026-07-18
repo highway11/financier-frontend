@@ -1,8 +1,27 @@
 .outflow-tip {
   font-size: 0.9rem;
-  width: 30em;
-  height: 10em;
+  width: 65em;
+  height: 15em;
 
   display: flex;
   flex-direction: column;
+
+  .account__th,
+  .account__td {
+    &:nth-child(1) {
+      width: 12%;
+    }
+    &:nth-child(2) {
+      width: 18%;
+    }
+    &:nth-child(3) {
+      width: 30%;
+    }
+    &:nth-child(4) {
+      width: 30%;
+    }
+    &:nth-child(5) {
+      width: 10%;
+    }
+  }
 }
