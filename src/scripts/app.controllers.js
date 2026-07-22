@@ -21,3 +21,4 @@ import "./controllers/editSplitTransactionCtrl";
 import "./controllers/cancelClickCtrl";
 import "./controllers/reports/heatMapCtrl";
 import "./controllers/importTransactionsCtrl";
+import "./controllers/plaidLinkCtrl";

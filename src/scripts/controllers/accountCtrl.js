@@ -18,7 +18,8 @@ angular
       myBudget,
       budgetRecord,
       Hotkeys,
-      ngDialog
+      ngDialog,
+      plaidLink
     ) {
       const that = this;
 
@@ -169,6 +170,37 @@ angular
           scope,
           className: "ngdialog-theme-default ngdialog-theme-default--large modal import-transactions-modal",
         });
+      };
+
+      this.openPlaidModal = () => {
+        const scope = $scope.$new({});
+        scope.manager = this.manager;
+        scope.myBudget = this.myBudget;
+        scope.dbCtrl = $scope.dbCtrl;
+
+        ngDialog.open({
+          template: require("../../views/modal/plaidLink.html").default,
+          controller: "plaidLinkCtrl",
+          controllerAs: "plaidLinkCtrl",
+          scope,
+          className: "ngdialog-theme-default ngdialog-theme-default--large modal plaid-link-modal",
+        });
+      };
+
+      this.isSyncingPlaid = false;
+      this.syncPlaid = () => {
+        this.isSyncingPlaid = true;
+        plaidLink
+          .sync($stateParams.budgetId)
+          .then((res) => {
+            $rootScope.$broadcast("pouchdb:change");
+          })
+          .catch((err) => {
+            console.error("Plaid sync error:", err);
+          })
+          .finally(() => {
+            this.isSyncingPlaid = false;
+          });
       };
 
       this.createTransaction = () => {

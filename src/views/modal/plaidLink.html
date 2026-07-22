@@ -1,0 +1,123 @@
+<h2>Bank Sync (Plaid Integration)</h2>
+
+<!-- Loading Spinner -->
+<div ng-if="plaidLinkCtrl.loading" style="text-align: center; padding: 30px 0;">
+  <i class="fa fa-circle-o-notch fa-spin fa-2x" style="color: #4a90e2;"></i>
+  <p style="margin-top: 10px; color: #666;">Connecting to Plaid...</p>
+</div>
+
+<!-- Messages -->
+<div ng-if="plaidLinkCtrl.error" class="message message--main" style="background-color: #fde8e8; border-color: #f8b4b4; color: #9b1c1c; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px;">
+  <i class="fa fa-exclamation-triangle"></i> {{plaidLinkCtrl.error}}
+</div>
+
+<div ng-if="plaidLinkCtrl.successMessage" class="message message--main" style="background-color: #def7ec; border-color: #84e1bc; color: #03543f; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px;">
+  <i class="fa fa-check-circle"></i> {{plaidLinkCtrl.successMessage}}
+</div>
+
+<!-- View 1: Manage Existing Linked Connections -->
+<div ng-if="!plaidLinkCtrl.loading && plaidLinkCtrl.step === 'MANAGE'">
+  <p style="color: #555; margin-bottom: 20px;">
+    Automatically sync transactions from Simplii Financial, PC Financial, and MBNA with your budget.
+  </p>
+
+  <div ng-if="!plaidLinkCtrl.linkedItems.length" style="background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 8px; padding: 25px; text-align: center; margin-bottom: 20px;">
+    <i class="fa fa-university fa-3x" style="color: #9ca3af; margin-bottom: 10px;"></i>
+    <h3 style="margin: 5px 0; color: #374151;">No Bank Connections Linked Yet</h3>
+    <p style="color: #6b7280; font-size: 13px; margin-bottom: 15px;">
+      Connect your bank accounts securely via Plaid to auto-sync transactions into Financier.
+    </p>
+  </div>
+
+  <div ng-if="plaidLinkCtrl.linkedItems.length" style="margin-bottom: 20px;">
+    <h3 style="font-size: 14px; text-transform: uppercase; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 10px;">
+      Linked Bank Accounts
+    </h3>
+
+    <div ng-repeat="item in plaidLinkCtrl.linkedItems" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 15px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="font-size: 15px; color: #111827;">
+            <i class="fa fa-university" style="color: #4f46e5; margin-right: 8px;"></i>
+            {{item.institution_name || 'Bank Connection'}}
+          </strong>
+          <span style="display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 12px; margin-left: 8px; font-weight: 600;"
+                ng-style="{'background': item.status === 'active' ? '#def7ec' : '#fde8e8', 'color': item.status === 'active' ? '#03543f' : '#9b1c1c'}">
+            {{item.status || 'Active'}}
+          </span>
+
+          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+            <span ng-if="item.last_synced">Last synced: {{item.last_synced | date:'short'}}</span>
+            <span ng-if="!item.last_synced">Never synced</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button class="button" ng-click="plaidLinkCtrl.triggerSync(item.item_id)" ng-disabled="plaidLinkCtrl.syncing" style="font-size: 12px; padding: 6px 12px;">
+            <i class="fa fa-refresh" ng-class="{'fa-spin': plaidLinkCtrl.syncing}"></i> Sync Now
+          </button>
+          <button class="button button--danger" ng-click="plaidLinkCtrl.unlinkItem(item.item_id, item.institution_name)" style="font-size: 12px; padding: 6px 12px; background-color: #ef4444; color: white; border: none; border-radius: 4px;">
+            <i class="fa fa-trash"></i> Unlink
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+    <button class="button button--primary" ng-click="plaidLinkCtrl.startPlaidLink()" style="background-color: #2563eb; color: white; border-radius: 6px; font-weight: 600; padding: 8px 16px;">
+      <i class="fa fa-plus-circle"></i> + Link New Bank Account
+    </button>
+    <button class="button" ng-click="closeThisDialog()" style="padding: 8px 16px;">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- View 2: Account Mapping Step after Plaid Link completes -->
+<div ng-if="!plaidLinkCtrl.loading && plaidLinkCtrl.step === 'MAP_ACCOUNTS'">
+  <h3 style="margin-top: 0; color: #1f2937;">Map Discovered Accounts</h3>
+  <p style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">
+    Select which Financier account each bank account should sync transactions to:
+  </p>
+
+  <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 20px;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+      <thead>
+        <tr style="background: #f9fafb; border-bottom: 1px solid #e5e7eb; color: #4b5563;">
+          <th style="padding: 10px 12px;">Bank Account</th>
+          <th style="padding: 10px 12px;">Sync to Financier Account</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="acc in plaidLinkCtrl.newLinkData.accounts" style="border-bottom: 1px solid #f3f4f6;">
+          <td style="padding: 12px;">
+            <strong style="color: #111827;">{{acc.name}}</strong>
+            <div style="font-size: 11px; color: #6b7280;">
+              {{acc.subtype | uppercase}} ••••{{acc.mask}}
+            </div>
+          </td>
+          <td style="padding: 12px;">
+            <select ng-model="plaidLinkCtrl.accountMappings[acc.id]" style="width: 100%; padding: 6px 10px; border-radius: 4px; border: 1px solid #d1d5db;">
+              <option value="CREATE_NEW">✨ Create New Financier Account</option>
+              <option value="IGNORE">🚫 Don't Sync This Account</option>
+              <option disabled>────────────────────</option>
+              <option ng-repeat="fa in plaidLinkCtrl.financierAccounts" value="{{fa.id}}">
+                {{fa.name}} ({{fa.onBudget ? 'On Budget' : 'Off Budget'}})
+              </option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display: flex; justify-content: flex-end; gap: 10px;">
+    <button class="button" ng-click="plaidLinkCtrl.step = 'MANAGE'" style="padding: 8px 16px;">
+      Cancel
+    </button>
+    <button class="button button--primary" ng-click="plaidLinkCtrl.saveMappingsAndLink()" style="background-color: #059669; color: white; border-radius: 6px; font-weight: 600; padding: 8px 16px;">
+      <i class="fa fa-check"></i> Save & Start Syncing
+    </button>
+  </div>
+</div>

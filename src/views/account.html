@@ -152,6 +152,13 @@
 
       <button
         class="account__add-button"
+        ng-click="dbCtrl.stopPropagation($event); accountCtrl.openPlaidModal()"
+      >
+        <i class="fa fa-university"></i> Bank Sync
+      </button>
+
+      <button
+        class="account__add-button"
         ng-if="accountCtrl.selectedTransactions.length"
         bulk-edit-transactions="accountCtrl.selectedTransactions"
         manager="dbCtrl.manager"

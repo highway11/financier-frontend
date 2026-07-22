@@ -41,7 +41,8 @@ registerRoute(
     if (
       url.pathname.startsWith("/db/") ||
       url.pathname.startsWith("/docs/") ||
-      url.pathname.startsWith("/manage/")
+      url.pathname.startsWith("/manage/") ||
+      url.pathname.startsWith("/plaid/")
     ) {
       return false;
     }

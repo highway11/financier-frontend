@@ -43,6 +43,7 @@ app.use(
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'strict-dynamic'",
+        "https://cdn.plaid.com",
         function (req, res) {
           return "'nonce-" + res.locals.nonce + "'";
         },
@@ -60,7 +61,7 @@ app.use(
       reportUri: "/report-violation",
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
-      frameSrc: ["https://js.stripe.com"],
+      frameSrc: ["https://js.stripe.com", "https://cdn.plaid.com"],
     },
 
     // Set to true if you only want browsers to report errors, not block them.
