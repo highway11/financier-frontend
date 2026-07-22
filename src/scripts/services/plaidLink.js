@@ -122,5 +122,14 @@ angular.module("financier").factory("plaidLink", ($q, $http) => {
         .post("/plaid/update_mappings", { itemId, accountMappings })
         .then((res) => res.data);
     },
+
+    /**
+     * Clean up duplicate transactions in budget
+     */
+    deduplicate(budgetId) {
+      return $http
+        .post("/plaid/deduplicate", { budgetId })
+        .then((res) => res.data);
+    },
   };
 });

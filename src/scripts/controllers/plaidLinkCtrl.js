@@ -239,6 +239,28 @@ angular
           });
       };
 
+      /**
+       * Remove duplicate transactions in current budget
+       */
+      this.deduplicate = function () {
+        that.syncing = true;
+        that.error = null;
+
+        return plaidLink
+          .deduplicate(budgetId)
+          .then((res) => {
+            that.successMessage = `Cleaned up ${res.removedCount || 0} duplicate transaction(s)!`;
+            $scope.$broadcast("pouchdb:change");
+          })
+          .catch((err) => {
+            console.error("Deduplication error:", err);
+            that.error = err.data?.error || "Failed to deduplicate transactions.";
+          })
+          .finally(() => {
+            that.syncing = false;
+          });
+      };
+
       // Initial load on modal open
       this.loadLinkedAccounts();
     }

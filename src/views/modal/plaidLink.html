@@ -65,9 +65,14 @@
   </div>
 
   <div style="display: flex; justify-content: space-between; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
-    <button class="button button--primary" ng-click="plaidLinkCtrl.startPlaidLink()" style="background-color: #2563eb; color: white; border-radius: 6px; font-weight: 600; padding: 8px 16px;">
-      <i class="fa fa-plus-circle"></i> + Link New Bank Account
-    </button>
+    <div style="display: flex; gap: 8px;">
+      <button class="button button--primary" ng-click="plaidLinkCtrl.startPlaidLink()" style="background-color: #2563eb; color: white; border-radius: 6px; font-weight: 600; padding: 8px 16px;">
+        <i class="fa fa-plus-circle"></i> + Link New Bank Account
+      </button>
+      <button class="button" ng-click="plaidLinkCtrl.deduplicate()" ng-disabled="plaidLinkCtrl.syncing" style="border-radius: 6px; padding: 8px 16px; background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db;">
+        <i class="fa fa-magic"></i> Clean Duplicates
+      </button>
+    </div>
     <button class="button" ng-click="closeThisDialog()" style="padding: 8px 16px;">
       Close
     </button>
