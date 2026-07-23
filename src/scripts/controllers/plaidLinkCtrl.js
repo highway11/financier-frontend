@@ -21,6 +21,7 @@ angular
       this.syncing = false;
       this.error = null;
       this.successMessage = null;
+      this.lookbackDays = "3"; // Default to 3 days
 
       // Existing linked items from backend
       this.linkedItems = [];
@@ -192,7 +193,7 @@ angular
         that.error = null;
 
         return plaidLink
-          .sync(budgetId, itemId)
+          .sync(budgetId, itemId, that.lookbackDays)
           .then((res) => {
             let totalAdded = 0;
             if (res.items) {

@@ -52,7 +52,14 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <select ng-model="plaidLinkCtrl.lookbackDays" style="font-size: 12px; padding: 5px 8px; border-radius: 4px; border: 1px solid #d1d5db; background: #fff;" title="Sync window duration">
+            <option value="3">Last 3 Days</option>
+            <option value="7">Last 7 Days</option>
+            <option value="14">Last 14 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="0">All Available (30+ Days)</option>
+          </select>
           <button class="button" ng-click="plaidLinkCtrl.triggerSync(item.item_id)" ng-disabled="plaidLinkCtrl.syncing" style="font-size: 12px; padding: 6px 12px;">
             <i class="fa fa-refresh" ng-class="{'fa-spin': plaidLinkCtrl.syncing}"></i> Sync Now
           </button>

@@ -90,9 +90,9 @@ angular.module("financier").factory("plaidLink", ($q, $http) => {
     /**
      * Trigger a transaction sync for a budget or specific item
      */
-    sync(budgetId, itemId) {
+    sync(budgetId, itemId, lookbackDays) {
       return $http
-        .post("/plaid/sync", { budgetId, itemId })
+        .post("/plaid/sync", { budgetId, itemId, lookbackDays, resetCursor: true })
         .then((res) => res.data);
     },
 
