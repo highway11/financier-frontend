@@ -63,9 +63,9 @@ angular
         that.error = null;
 
         plaidLink
-          .createLinkToken(budgetId)
-          .then((res) => {
-            return plaidLink.openLink(res.link_token);
+          .createLinkToken()
+          .then((linkToken) => {
+            return plaidLink.openLink(linkToken);
           })
           .then(({ public_token, metadata }) => {
             // User completed Plaid Link widget
@@ -210,6 +210,38 @@ angular
           })
           .finally(() => {
             that.syncing = false;
+            that.loadLinkedAccounts();
+          });
+      };
+
+      /**
+       * Re-authenticate an item in Plaid Link Update Mode (for ITEM_LOGIN_REQUIRED)
+       */
+      this.reauthenticate = function (itemId) {
+        that.loading = true;
+        that.error = null;
+
+        return plaidLink
+          .createLinkToken(itemId)
+          .then((linkToken) => {
+            return plaidLink.openLink(linkToken);
+          })
+          .then(() => {
+            that.successMessage = "Bank login re-authenticated successfully!";
+            return that.triggerSync(itemId);
+          })
+          .catch((err) => {
+            if (err && err.cancelled) {
+              return;
+            }
+            console.error("Re-authentication error:", err);
+            that.error =
+              err?.display_message ||
+              err?.data?.error ||
+              "Re-authentication failed.";
+          })
+          .finally(() => {
+            that.loading = false;
             that.loadLinkedAccounts();
           });
       };

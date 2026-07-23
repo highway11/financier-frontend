@@ -43,16 +43,22 @@
           </strong>
           <span style="display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 12px; margin-left: 8px; font-weight: 600;"
                 ng-style="{'background': item.status === 'active' ? '#def7ec' : '#fde8e8', 'color': item.status === 'active' ? '#03543f' : '#9b1c1c'}">
-            {{item.status || 'Active'}}
+            {{item.status === 'login_required' ? 'Action Required' : (item.status || 'Active')}}
           </span>
 
           <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">
             <span ng-if="item.last_synced">Last synced: {{item.last_synced | date:'short'}}</span>
             <span ng-if="!item.last_synced">Never synced</span>
           </div>
+          <div ng-if="item.status === 'login_required' || item.last_error" style="font-size: 11px; color: #ef4444; margin-top: 2px;">
+            <i class="fa fa-exclamation-triangle"></i> {{item.last_error || 'Re-authentication required by bank'}}
+          </div>
         </div>
 
         <div style="display: flex; gap: 8px; align-items: center;">
+          <button ng-if="item.status === 'login_required' || item.last_error" class="button" ng-click="plaidLinkCtrl.reauthenticate(item.item_id)" style="font-size: 12px; padding: 6px 12px; background-color: #f59e0b; color: white; border: none; border-radius: 4px; font-weight: 600;">
+            <i class="fa fa-key"></i> Re-authenticate
+          </button>
           <select ng-model="plaidLinkCtrl.lookbackDays" style="font-size: 12px; padding: 5px 8px; border-radius: 4px; border: 1px solid #d1d5db; background: #fff;" title="Sync window duration">
             <option value="3">Last 3 Days</option>
             <option value="7">Last 7 Days</option>

@@ -37,10 +37,12 @@ angular.module("financier").factory("plaidLink", ($q, $http) => {
     loadScript,
 
     /**
-     * Create a link token for Plaid Link
+     * Create a Plaid Link token (for new link or update mode)
      */
-    createLinkToken(budgetId) {
-      return $http.post("/plaid/create_link_token", { budgetId }).then((res) => res.data);
+    createLinkToken(itemId) {
+      return $http
+        .post("/plaid/create_link_token", { itemId })
+        .then((res) => res.data.link_token);
     },
 
     /**
